@@ -1,0 +1,1 @@
+ssh -A ubuntu@10.2.9.148 "mpirun -np 4 -f hosts /home/ubuntu/main $1"
