@@ -1,5 +1,5 @@
 cd src || exit 1
-if [[ "$*" == "clean" ]]
+if [[ "$*" == *"clean"* ]]
 then
   make clean
 fi
@@ -11,7 +11,7 @@ MADE_SUCC="$?"
 if ! echo "$MADE" | grep -q "Nothing to be done";
 then
   echo "$MADE"
-  if [[ "$MADE_SUCC" == 0 ]]
+  if [[ "$MADE_SUCC" == 0 ]] && [[ "$*" != *"nocopy"* ]]
   then
     cpmpi 0 main && \
     cpmpi 1 main && \
@@ -20,12 +20,16 @@ then
   fi
 fi
 
-
 ARR_SIZE=1000
 
-
-if [[ "$*" == "run" ]] && [[ "$MADE_SUCC" == 0 ]]
+if [[ "$*" == *"runremote"* ]] && [[ "$MADE_SUCC" == 0 ]]
 then
   cd ..
   ./run.sh 1000
+fi
+
+if [[ "$*" == *"runlocal"* ]] && [[ "$MADE_SUCC" == 0 ]]
+then
+  cd ..
+  ./run.sh 100 local
 fi
