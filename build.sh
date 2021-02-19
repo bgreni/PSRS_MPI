@@ -21,15 +21,16 @@ then
 fi
 
 ARR_SIZE=1000
+SEED=1
 
 if [[ "$*" == *"runremote"* ]] && [[ "$MADE_SUCC" == 0 ]]
 then
   cd ..
-  ./run.sh 1000
+  ./run.sh ARR_SIZE SEED
 fi
 
 if [[ "$*" == *"runlocal"* ]] && [[ "$MADE_SUCC" == 0 ]]
 then
   cd ..
-  ./run.sh 100 local
+  ./run.sh ARR_SIZE SEED local
 fi

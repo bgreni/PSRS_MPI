@@ -1,5 +1,5 @@
-COMP = mpicxx -Wall -std=c++17 -Ofast -pthread -o
-OBJ = mpicxx -Wall -std=c++17 -Ofast -pthread -c
+COMP = mpicxx -Wall -std=c++17 -g -Ofast -o
+OBJ = mpicxx -Wall -std=c++17 -g -Ofast -c
 
 defaults: main
 
