@@ -20,6 +20,7 @@ bool verify_sorted(long *v, int len) {
     for (int i = 0; i < len - 1; ++i) {
         if (v[i] > v[i+1]) {
             cout << v[i] << " " << v[i+1] << endl << endl;
+            show(v, len);
         }
         assert(v[i] <= v[i+1]);
     }
