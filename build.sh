@@ -6,6 +6,8 @@ fi
 
 source ~/.dotfiles/bash_functions
 
+make singlethread
+cpmpi 0 singlethread
 MADE=$(make)
 MADE_SUCC="$?"
 if ! echo "$MADE" | grep -q "Nothing to be done";
@@ -20,17 +22,18 @@ then
   fi
 fi
 
-ARR_SIZE=1000
+ARR_SIZE=100000000
 SEED=2
+DO_VERIFY=1
 
 if [[ "$*" == *"runremote"* ]] && [[ "$MADE_SUCC" == 0 ]]
 then
   cd ..
-  ./run.sh $ARR_SIZE $SEED
+  ./run.sh $ARR_SIZE $SEED $DO_VERIFY
 fi
 
 if [[ "$*" == *"runlocal"* ]] && [[ "$MADE_SUCC" == 0 ]]
 then
   cd ..
-  ./run.sh $ARR_SIZE $SEED local
+  ./run.sh $ARR_SIZE $SEED $DO_VERIFY local
 fi

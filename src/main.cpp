@@ -16,13 +16,9 @@ using namespace std;
 #define BLOCK MPI_Barrier(MPI_COMM_WORLD)
 #define NOW MPI_Wtime()
 
+void print_results(const int do_verify);
 
 const int ROOT = 0;
-
-double phase_one_time;
-double phase_two_time;
-double phase_three_time;
-double phase_four_time;
 
 double p1_start;
 double p1_end;
@@ -36,20 +32,37 @@ double p3_end;
 double p4_start;
 double p4_end;
 
+double startup_start;
+double startup_end;
+
+double verify_start;
+double verify_end;
+
 int p;
+long EN;
 
 
 // BIGGEST ARRAY WE CAN DO IS LIKE 100 MIL
 
 int main(int argc, char ** argv) {
+    if (argc != 4) {
+        cout << "MISSING ARGS: EXPECTED 3, RECEIVED: " << argc << endl;
+    }
+
+    MPI_Init(&argc, &argv);
+
+    startup_start = NOW;
 
     const long SEED = strtol(argv[2], nullptr, 10);
     srandom(SEED);
     int rank;
     const long N = strtol(argv[1], nullptr, 10);
 //    const long N = 36;
-    long *original = new long[N];// {16 ,2 ,17, 24, 33, 28, 30, 1, 0, 27, 9, 25, 34, 23, 19, 18, 11, 7, 21, 13, 8, 35, 12, 29, 6, 3, 4, 14, 22, 15, 32, 10, 26, 31, 20, 5};
-    MPI_Init(&argc, &argv);
+    long *original = new long[N];//  {16 ,2 ,17, 24, 33, 28, 30, 1, 0, 27, 9, 25, 34, 23, 19, 18, 11, 7, 21, 13, 8, 35, 12, 29, 6, 3, 4, 14, 22, 15, 32, 10, 26, 31, 20, 5};
+
+    EN = N;
+    const int do_verify = strtol(argv[3], nullptr, 10);
+
 
     MPI_Comm_rank(MCW, &rank);
     MPI_Comm_size(MCW, &p);
@@ -71,7 +84,7 @@ int main(int argc, char ** argv) {
 //        show(&scounts[0], p);
         // Setting up input data
         for (int i = 0; i < N; ++i) {
-//            original[i] = random();
+            original[i] = random();
         }
     }
 
@@ -82,21 +95,22 @@ int main(int argc, char ** argv) {
 //        }
 //    }
 
-    long part[scounts[rank]];
+    long *part = new long[scounts[rank]];
 
     MPI_Scatterv(original, scounts, displs, ML, part, scounts[rank], ML, ROOT, MCW);
 
     /// START OF PHASE 1
     BLOCK;
-    if (MASTER)
+    if (MASTER) {
+        startup_end = NOW;
         p1_start = NOW;
+    }
 
 //    for (int i = 0; i < p; ++i) {
 //        BLOCK;
 //        if (rank == i) {
-//            cout << "PARTS" << endl;
-//            show(&part[0], scounts[rank]);
-//            cout << "\n\n";
+//            cout << "PARTS SIZE" << endl;
+//            cout << scounts[rank] << endl;
 //        }
 //    }
 
@@ -128,7 +142,7 @@ int main(int argc, char ** argv) {
     long pivots[p-1];
     if (MASTER) {
         p1_end = NOW;
-        p2_start = p2_end;
+        p2_start = p1_end;
 //        cout << "COMBINED SAMPLE" << endl;
         sort(all_samples, all_samples + p_sqrd);
 //        show(&all_samples[0], p_sqrd);
@@ -168,19 +182,20 @@ int main(int argc, char ** argv) {
     int end = 0;
     int last_reached = -1;
     for (int i = 0; i < p-1; ++i) {
-        for(;end < scounts[rank]; ++end) {
-//            while (part[end] < pivots[i]]) {
-//                partitions[i].push_back(part[par])
-//            }
-            if (part[end] > pivots[i]) {
-                for (int j = start; j < end; ++j) {
-                    partitions[i].push_back(part[j]);
-                }
+//        for(;end < scounts[rank]; ++end) {
+            while (part[end] <= pivots[i] && end < scounts[rank]) {
+                partitions[i].push_back(part[end]);
+                ++end;
+            }
+//            if (part[end] > pivots[i]) {
+//                for (int j = start; j < end; ++j) {
+//                    partitions[i].push_back(part[j]);
+//                }
                 last_reached = i;
                 start = end;
-                break;
-            }
-        }
+//                break;
+//            }
+//        }
     }
 
     for (int i = start; i < scounts[rank]; ++i) {
@@ -239,9 +254,6 @@ int main(int argc, char ** argv) {
 
 //    MPI_Waitall(p, recv_reqs, stats);
 
-
-
-    int real_sizes[p];
 
 //    for (int i = 0; i < p; ++i) {
 //        BLOCK;
@@ -323,10 +335,6 @@ int main(int argc, char ** argv) {
 //    }
 
 
-    for (int i = 0; i < p; ++i) {
-        MPI_Get_count(&stats[i], MPI_INT, &real_sizes[i]);
-    }
-
 //    if (rank == 1) {
 //        cout << "RANK 1 RECIEVED FROM RANK 2" << endl;
 //        show(recp[2], sizes[2]);
@@ -378,7 +386,7 @@ int main(int argc, char ** argv) {
 //        }
 //    }
 
-    long new_part[new_size];
+    long *new_part = new long[new_size];
     for (int i = 0; i < new_size; ++i) {
         int taken_index = 0;
         long smallest = INT64_MAX;
@@ -399,8 +407,11 @@ int main(int argc, char ** argv) {
 
     /// END OF PHASE 4
     BLOCK;
-    if (MASTER)
+    if (MASTER) {
         p4_end = NOW;
+        verify_start = NOW;
+    }
+
 
 
 
@@ -413,45 +424,50 @@ int main(int argc, char ** argv) {
 //        }
 //    }
 
-    for (int i = 0; i < p; ++i) {
-        BLOCK;
-        if (rank == i) {
-            verify_sorted(new_part, new_size);
-        }
-    }
-
-    int final_sizes[p];
-    MPI_Gather(&new_size, 1, MPI_INT, final_sizes, 1, MPI_INT, ROOT, MCW);
-
-    if (MASTER) {
-        int total = 0;
+    if (do_verify) {
         for (int i = 0; i < p; ++i) {
+            BLOCK;
+            if (rank == i) {
+                verify_sorted(new_part, new_size);
+            }
+        }
+
+        int final_sizes[p];
+        MPI_Gather(&new_size, 1, MPI_INT, final_sizes, 1, MPI_INT, ROOT, MCW);
+
+        if (MASTER) {
+            int total = 0;
+            for (int i = 0; i < p; ++i) {
 //            cout << final_sizes[i] << endl;
-            total += final_sizes[i];
-        }
+                total += final_sizes[i];
+            }
 //        cout << total << " " << N << endl;
-        assert(total == N);
-    }
-
-    long result[N];
-    int displs2[p];
-    displs2[0] = 0;
-    for (int i = 1; i < p; ++i) {
-        displs2[i] = final_sizes[i-1] + displs2[i-1];
-    }
-
-    MPI_Gatherv(new_part, new_size, ML, result, final_sizes, displs2, ML, ROOT, MCW);
-
-    if (MASTER) {
-        sort(original, original + N);
-
-        for (int i = 0; i < N; ++i) {
-//            cout << original[i] << " " << result[i] << endl;
-            assert(original[i] == result[i]);
+            assert(total == N);
         }
+
+        long *result = new long[N];
+        int displs2[p];
+        displs2[0] = 0;
+        for (int i = 1; i < p; ++i) {
+            displs2[i] = final_sizes[i-1] + displs2[i-1];
+        }
+
+        MPI_Gatherv(new_part, new_size, ML, result, final_sizes, displs2, ML, ROOT, MCW);
+
+        if (MASTER) {
+            sort(original, original + N);
+
+            for (int i = 0; i < N; ++i) {
+//            cout << original[i] << " " << result[i] << endl;
+                assert(original[i] == result[i]);
+            }
+            verify_end = NOW;
+        }
+        delete[] result;
     }
 
-
+    if (MASTER)
+        print_results(do_verify);
 
 
     for (int i = 0; i < p; ++i) {
@@ -461,15 +477,32 @@ int main(int argc, char ** argv) {
 
     delete[] original;
 
+    delete[] part;
+    delete[] new_part;
+
+
     BLOCK;
-    if (MASTER)
-        cout << "done :)" << endl;
+//    if (MASTER)
+//        cout << "done :)" << endl;
     MPI_Finalize();
 
     return 0;
 }
 
 
-void print_results() {
-    cout << "NODES USED: " << p << endl;
+void print_results(const int do_verify) {
+    cout << "CORES USED: " << p << endl;
+    cout << "INPUT SIZE: " << EN << endl;
+    cout << "TOTAL TIME: " << p4_end - p1_start << endl;
+    cout << "PHASE ONE TIME: " << p1_end - p1_start << endl;
+    cout << "PHASE TWO TIME: " << p2_end - p2_start << endl;
+    cout << "PHASE THREE TIME: " << p3_end - p3_start << endl;
+    cout << "PHASE FOUR TIME: " << p4_end - p4_start << endl;
+    cout << "STARTUP TIME: " << startup_end - startup_start << endl;
+    if (do_verify) {
+        cout << "VERIFICATION TIME: " << verify_end - verify_start << endl;
+    } else {
+        cout << "VERIFICATION TIME: " << 0 << endl;
+    }
+
 }

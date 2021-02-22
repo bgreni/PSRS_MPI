@@ -6,6 +6,8 @@ defaults: main
 main: main.o utils.o
 	$(COMP) main main.o utils.o
 
+singlethread: single_thread.cpp
+	g++ -Wall -std=c++17 -Ofast -g -o singlethread single_thread.cpp
 
 %.o: %.cpp
 	$(OBJ) $<
@@ -17,3 +19,4 @@ utils.o: utils.h utils.cpp
 clean:
 	-rm *.o $(objects)
 	-rm main
+	-rm singlethread
