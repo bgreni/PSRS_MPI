@@ -58,16 +58,16 @@ if __name__ == '__main__':
                 'p3time': None,
                 'p4time': None,
                 'speedup': 0,
-                'pertotalp1': None,
-                'pertotalp2': None,
-                'pertotalp3': None,
-                'pertotalp4': None,
+                'perp1': None,
+                'perp2': None,
+                'perp3': None,
+                'perp4': None,
                 'speedpercore': None
 
             })
         else:
-            if int(e[0]) == 16:
-                ind = 5
+            if int(e[0]) == 8:
+                ind = 4
             else:
                 ind = int(e[0]) / 2
             stuff.append({
@@ -79,53 +79,139 @@ if __name__ == '__main__':
                 'p3time': e[5],
                 'p4time': e[6],
                 'speedup': float(averaged[int(i - ind)][2]) / float(e[2]),
-                'pertotalp1': (float(e[3]) / float(e[2])) * 100,
-                'pertotalp2': (float(e[4]) / float(e[2])) * 100,
-                'pertotalp3': (float(e[5]) / float(e[2])) * 100,
-                'pertotalp4': (float(e[6]) / float(e[2])) * 100,
+                'perp1': (float(e[3]) / float(e[2])) * 100,
+                'perp2': (float(e[4]) / float(e[2])) * 100,
+                'perp3': (float(e[5]) / float(e[2])) * 100,
+                'perp4': (float(e[6]) / float(e[2])) * 100,
                 'speedpercore': (float(averaged[int(i - ind)][2]) / float(e[2])) / float(e[0])
             })
 
     df = pd.DataFrame(stuff)
     df.to_csv(os.path.join(p, 'out.csv'))
 
-    sizes = list(map(int, set(df['size'].tolist())))
+    sizes = sorted(list(map(int, set(df['size'].tolist()))))
 
     lines = []
     colors = ['blue', 'red', 'black', 'pink', 'orange', 'olive', 'cyan', 'brown', 'green']
+    cores = [0, 1, 2, 4, 6, 8]
+    ticks = [0, 2, 4, 6, 8]
 
+    # big speedup graph
     plt.figure()
-    plt.xticks([1, 2, 4, 6, 8])
+    plt.xticks(ticks)
     for i in range(len(sizes)):
-        cores = list(map(int, df.query(f'size=={sizes[i]}')['cores'].tolist()))
-        cores.insert(0, 0)
         speeds = rounds(df.query(f'size=={sizes[i]}')['speedup'].tolist())
         speeds.insert(0, 0)
         plt.plot(cores, speeds, color=colors[i], label=f'{sizes[i]}')
-    plt.plot([0, 1, 2, 4, 6, 8], [0, 1, 2, 4, 6, 8], color='grey', label='Linear')
+    plt.plot(cores, cores, color='grey', label='Linear')
     plt.legend()
     plt.xlabel('Processors')
     plt.ylabel('Speedup')
     plt.title('Speedups')
     plt.savefig(os.path.join(p, 'speedups.png'))
 
+
+    # total times table
     fig = plt.figure(figsize=(5, 1))
     ax = fig.add_subplot(1, 1, 1)
-    cores = ['1 core', '2 cores', '4 cores', '6 cores', '8 cores']
+    cors = ['1 core', '2 cores', '4 cores', '6 cores', '8 cores']
     values = []
     for i in range(len(sizes)):
         times = rounds(df.query(f'size=={sizes[i]}')['time'].tolist())
         values.append(times)
 
     table = ax.table(cellText=values, rowLabels=sizes,
-                     colLabels=cores, loc='upper center', colLoc='center',
+                     colLabels=cors, loc='upper center', colLoc='center',
                      rowLoc='center', cellLoc='center')
 
     table.scale(1, 1.5)
     ax.set_title('Times')
     ax.axis('off')
-    # table.set_fontsize(12)
     plt.savefig(os.path.join(p, 'timestable.png'), pad_inches=0.5, bbox_inches='tight')
+
+
+    # single speedup graph
+    plt.figure()
+    plt.xticks(ticks)
+    speeds = rounds(df.query(f'size=={sizes[-1]}')['speedup'].tolist())
+    speeds.insert(0, 0)
+    plt.plot(cores, speeds, color='red', label=f'{sizes[-1]}')
+    plt.plot(cores, cores, color='grey', label='Linear')
+    plt.legend()
+    plt.xlabel('Processors')
+    plt.ylabel('Speedup')
+    plt.title('Speedups')
+    plt.savefig(os.path.join(p, 'singlepeedup.png'))
+
+
+    # REAL TIME PHASE BY PHASE
+    plt.figure()
+    plt.xticks(ticks)
+
+    qres = df.query(f'size=={sizes[-1]}')
+    p1 = qres['p1time'].tolist()
+    p2 = qres['p2time'].tolist()
+    p3 = qres['p3time'].tolist()
+    p4 = qres['p4time'].tolist()
+    c = cores[1:]
+
+    plt.plot(c, p1, color='red', label='Phase 1')
+    plt.fill_between(c, p1, p3, facecolor='red', alpha=0.3)
+    plt.plot(c, p3, color='blue', label='Phase 3')
+    plt.fill_between(c, p3, p4, facecolor='blue', alpha=0.3)
+    plt.plot(c, p4, color='green', label='Phase 4')
+    plt.fill_between(c, p4, facecolor='green', alpha=0.3)
+    plt.legend()
+    plt.xlabel('Processors')
+    plt.ylabel('Real Time')
+    plt.title('Phase-by-Phase Analysis (Real Time)')
+
+    plt.savefig(os.path.join(p, 'phasetotaltime.png'))
+
+    # PERCENTAGE REAL TIME PHASE BY PHASE
+    plt.figure()
+    plt.xticks(ticks)
+
+    qres = df.query(f'size=={sizes[-1]}')
+    p1 = qres['perp1'].tolist()
+    p2 = qres['perp2'].tolist()
+    p3 = qres['perp3'].tolist()
+    p4 = qres['perp4'].tolist()
+    c = cores[1:]
+
+    plt.plot(c, p1, color='red', label='Phase 1')
+    plt.fill_between(c, p1, p3, facecolor='red', alpha=0.3)
+    plt.plot(c, p3, color='blue', label='Phase 3')
+    plt.fill_between(c, p3, p4, facecolor='blue', alpha=0.3)
+    plt.plot(c, p4, color='green', label='Phase 4')
+    plt.fill_between(c, p4, facecolor='green', alpha=0.3)
+    plt.xlabel('Processors')
+    plt.ylabel('Percentage Real Time')
+    plt.title('Phase-by-Phase Analysis (Percentage Real Time)')
+
+    plt.savefig(os.path.join(p, 'phaseperime.png'))
+
+
+    # speedup table
+    fig = plt.figure(figsize=(5, 1))
+    ax = fig.add_subplot(1, 1, 1)
+    cors = ['2 cores', '4 cores', '6 cores', '8 cores']
+    values = []
+    for i in range(len(sizes)):
+        speeds = rounds(df.query(f'size=={sizes[i]}')['speedup'].tolist())
+        values.append(speeds[1:])
+
+    table = ax.table(cellText=values, rowLabels=sizes,
+                     colLabels=cors, loc='upper center', colLoc='center',
+                     rowLoc='center', cellLoc='center')
+
+    table.scale(1, 1.5)
+    ax.set_title('Speedups')
+    ax.axis('off')
+    plt.savefig(os.path.join(p, 'speedupstable.png'), pad_inches=0.5, bbox_inches='tight')
+
+
+
     print('FIGURE CREATION COMPLETE')
 
 

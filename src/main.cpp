@@ -99,6 +99,10 @@ int main(int argc, char ** argv) {
 
     MPI_Scatterv(original, scounts, displs, ML, part, scounts[rank], ML, ROOT, MCW);
 
+    if (rank != 0) {
+        delete[] original;
+    }
+
     /// START OF PHASE 1
     BLOCK;
     if (MASTER) {
@@ -156,7 +160,6 @@ int main(int argc, char ** argv) {
     MPI_Bcast(pivots, p-1, ML, ROOT, MCW);
 
     /// END OF PHASE 2
-    BLOCK;
     if (MASTER) {
         p2_end = NOW;
         p3_start = p2_end;
@@ -227,7 +230,7 @@ int main(int argc, char ** argv) {
     MPI_Status stats[p];
 
     // this has to be here for some reason
-    BLOCK;
+//    BLOCK;
 
 
     // unfortunately more overhead, but potentially memory waste of having to guess the
@@ -268,14 +271,13 @@ int main(int argc, char ** argv) {
 //    }
 
 
-    BLOCK;
     long **recp = new long*[p];
 
     for (int i = 0; i < p; ++i) {
         recp[i] = new long[sizes[i]];
     }
 
-    BLOCK;
+//    BLOCK;
     for (int i = 0; i < p; ++i) {
 //        for (int j = 0; j < p; ++j) {
 //            BLOCK;
@@ -317,8 +319,6 @@ int main(int argc, char ** argv) {
 //
 //    int inds[]
 
-
-    BLOCK;
 
 
 //    for (int i = 0; i < p; ++i) {
@@ -406,7 +406,7 @@ int main(int argc, char ** argv) {
 
 
     /// END OF PHASE 4
-    BLOCK;
+//    BLOCK;
     if (MASTER) {
         p4_end = NOW;
         verify_start = NOW;
@@ -475,7 +475,8 @@ int main(int argc, char ** argv) {
     }
     delete[] recp;
 
-    delete[] original;
+    if (MASTER)
+        delete[] original;
 
     delete[] part;
     delete[] new_part;

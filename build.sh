@@ -22,8 +22,8 @@ then
   fi
 fi
 
-ARR_SIZE=100000000
-SEED=2
+ARR_SIZE=1000000
+SEED=10
 DO_VERIFY=1
 
 if [[ "$*" == *"runremote"* ]] && [[ "$MADE_SUCC" == 0 ]]
