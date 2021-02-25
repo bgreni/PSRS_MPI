@@ -211,6 +211,132 @@ if __name__ == '__main__':
     plt.savefig(os.path.join(p, 'speedupstable.png'), pad_inches=0.5, bbox_inches='tight')
 
 
+    ind = -3
+    # single speedup graph for second largest
+    plt.figure()
+    plt.xticks(ticks)
+    speeds = rounds(df.query(f'size=={sizes[ind]}')['speedup'].tolist())
+    speeds.insert(0, 0)
+    plt.plot(cores, speeds, color='red', label=f'{sizes[-2]}')
+    plt.plot(cores, cores, color='grey', label='Linear')
+    plt.legend()
+    plt.xlabel('Processors')
+    plt.ylabel('Speedup')
+    plt.title('Speedups')
+    plt.savefig(os.path.join(p, 'singlepeedupsecond.png'))
+
+
+    # REAL TIME PHASE BY PHASE for second largest
+    plt.figure()
+    plt.xticks(ticks)
+
+    qres = df.query(f'size=={sizes[ind]}')
+    p1 = qres['p1time'].tolist()
+    p2 = qres['p2time'].tolist()
+    p3 = qres['p3time'].tolist()
+    p4 = qres['p4time'].tolist()
+    c = cores[1:]
+
+    plt.plot(c, p1, color='red', label='Phase 1')
+    plt.fill_between(c, p1, p3, facecolor='red', alpha=0.3)
+    plt.plot(c, p3, color='blue', label='Phase 3')
+    plt.fill_between(c, p3, p4, facecolor='blue', alpha=0.3)
+    plt.plot(c, p4, color='green', label='Phase 4')
+    plt.fill_between(c, p4, facecolor='green', alpha=0.3)
+    plt.legend()
+    plt.xlabel('Processors')
+    plt.ylabel('Real Time')
+    plt.title('Phase-by-Phase Analysis (Real Time)')
+
+    plt.savefig(os.path.join(p, 'phasetotaltimesecond.png'))
+
+    # PERCENTAGE REAL TIME PHASE BY PHASE for second largest
+    plt.figure()
+    plt.xticks(ticks)
+
+    qres = df.query(f'size=={sizes[ind]}')
+    p1 = qres['perp1'].tolist()
+    p2 = qres['perp2'].tolist()
+    p3 = qres['perp3'].tolist()
+    p4 = qres['perp4'].tolist()
+    c = cores[1:]
+
+    plt.plot(c, p1, color='red', label='Phase 1')
+    plt.fill_between(c, p1, p3, facecolor='red', alpha=0.3)
+    plt.plot(c, p3, color='blue', label='Phase 3')
+    plt.fill_between(c, p3, p4, facecolor='blue', alpha=0.3)
+    plt.plot(c, p4, color='green', label='Phase 4')
+    plt.fill_between(c, p4, facecolor='green', alpha=0.3)
+    plt.xlabel('Processors')
+    plt.ylabel('Percentage Real Time')
+    plt.title('Phase-by-Phase Analysis (Percentage Real Time)')
+
+    plt.savefig(os.path.join(p, 'phaseperimesecond.png'))
+
+
+
+    ind = -2
+    # single speedup graph for second largest
+    plt.figure()
+    plt.xticks(ticks)
+    speeds = rounds(df.query(f'size=={sizes[ind]}')['speedup'].tolist())
+    speeds.insert(0, 0)
+    plt.plot(cores, speeds, color='red', label=f'{sizes[-2]}')
+    plt.plot(cores, cores, color='grey', label='Linear')
+    plt.legend()
+    plt.xlabel('Processors')
+    plt.ylabel('Speedup')
+    plt.title('Speedups')
+    plt.savefig(os.path.join(p, 'singlepeedupthird.png'))
+
+
+    # REAL TIME PHASE BY PHASE for second largest
+    plt.figure()
+    plt.xticks(ticks)
+
+    qres = df.query(f'size=={sizes[ind]}')
+    p1 = qres['p1time'].tolist()
+    p2 = qres['p2time'].tolist()
+    p3 = qres['p3time'].tolist()
+    p4 = qres['p4time'].tolist()
+    c = cores[1:]
+
+    plt.plot(c, p1, color='red', label='Phase 1')
+    plt.fill_between(c, p1, p3, facecolor='red', alpha=0.3)
+    plt.plot(c, p3, color='blue', label='Phase 3')
+    plt.fill_between(c, p3, p4, facecolor='blue', alpha=0.3)
+    plt.plot(c, p4, color='green', label='Phase 4')
+    plt.fill_between(c, p4, facecolor='green', alpha=0.3)
+    plt.legend()
+    plt.xlabel('Processors')
+    plt.ylabel('Real Time')
+    plt.title('Phase-by-Phase Analysis (Real Time)')
+
+    plt.savefig(os.path.join(p, 'phasetotaltimethird.png'))
+
+    # PERCENTAGE REAL TIME PHASE BY PHASE for second largest
+    plt.figure()
+    plt.xticks(ticks)
+
+    qres = df.query(f'size=={sizes[ind]}')
+    p1 = qres['perp1'].tolist()
+    p2 = qres['perp2'].tolist()
+    p3 = qres['perp3'].tolist()
+    p4 = qres['perp4'].tolist()
+    c = cores[1:]
+
+    plt.plot(c, p1, color='red', label='Phase 1')
+    plt.fill_between(c, p1, p3, facecolor='red', alpha=0.3)
+    plt.plot(c, p3, color='blue', label='Phase 3')
+    plt.fill_between(c, p3, p4, facecolor='blue', alpha=0.3)
+    plt.plot(c, p4, color='green', label='Phase 4')
+    plt.fill_between(c, p4, facecolor='green', alpha=0.3)
+    plt.xlabel('Processors')
+    plt.ylabel('Percentage Real Time')
+    plt.title('Phase-by-Phase Analysis (Percentage Real Time)')
+
+    plt.savefig(os.path.join(p, 'phaseperimethird.png'))
+
 
     print('FIGURE CREATION COMPLETE')
 
