@@ -7,6 +7,8 @@ from pprint import pprint
 import pathlib
 import numpy as np
 import matplotlib.pyplot as plt
+import begin
+
 
 def config_in(newitem, allitems):
     for item in allitems:
@@ -19,10 +21,13 @@ def rounds(l):
     return [round(x, 4) for x in l]
 
 
-if __name__ == '__main__':
+@begin.start(auto_convert=True)
+def main(local=False):
+
+    base = 'local' if local else ''
 
     p = pathlib.Path(__file__).parent.absolute()
-    content = open(os.path.join(p, 'results.txt')).read().split('\n\n')
+    content = open(os.path.join(p, base + 'results.txt')).read().split('\n\n')
     entries = [x.split('\n') for x in content]
     entries[-1] = entries[-1][:-1]
 
@@ -108,7 +113,7 @@ if __name__ == '__main__':
     plt.xlabel('Processors')
     plt.ylabel('Speedup')
     plt.title('Speedups')
-    plt.savefig(os.path.join(p, 'speedups.png'))
+    plt.savefig(os.path.join(p, base + 'speedups.png'))
 
 
     # total times table
@@ -127,7 +132,7 @@ if __name__ == '__main__':
     table.scale(1, 1.5)
     ax.set_title('Times')
     ax.axis('off')
-    plt.savefig(os.path.join(p, 'timestable.png'), pad_inches=0.5, bbox_inches='tight')
+    plt.savefig(os.path.join(p, base + 'timestable.png'), pad_inches=0.5, bbox_inches='tight')
 
 
     # single speedup graph
@@ -141,14 +146,14 @@ if __name__ == '__main__':
     plt.xlabel('Processors')
     plt.ylabel('Speedup')
     plt.title('Speedups')
-    plt.savefig(os.path.join(p, 'singlepeedup.png'))
+    plt.savefig(os.path.join(p, base + 'singlepeedup.png'))
 
 
     # REAL TIME PHASE BY PHASE
     plt.figure()
     plt.xticks(ticks)
-
-    qres = df.query(f'size=={sizes[-1]}')
+    ind = -1
+    qres = df.query(f'size=={sizes[ind]}')
     p1 = qres['p1time'].tolist()
     p2 = qres['p2time'].tolist()
     p3 = qres['p3time'].tolist()
@@ -164,15 +169,15 @@ if __name__ == '__main__':
     plt.legend()
     plt.xlabel('Processors')
     plt.ylabel('Real Time')
-    plt.title('Phase-by-Phase Analysis (Real Time)')
+    plt.title('Phase-by-Phase Analysis (Real Time)' + ' ({})'.format(sizes[ind]))
 
-    plt.savefig(os.path.join(p, 'phasetotaltime.png'))
+    plt.savefig(os.path.join(p, base + 'phasetotaltime.png'))
 
     # PERCENTAGE REAL TIME PHASE BY PHASE
     plt.figure()
     plt.xticks(ticks)
 
-    qres = df.query(f'size=={sizes[-1]}')
+    qres = df.query(f'size=={sizes[ind]}')
     p1 = qres['perp1'].tolist()
     p2 = qres['perp2'].tolist()
     p3 = qres['perp3'].tolist()
@@ -187,9 +192,9 @@ if __name__ == '__main__':
     plt.fill_between(c, p4, facecolor='green', alpha=0.3)
     plt.xlabel('Processors')
     plt.ylabel('Percentage Real Time')
-    plt.title('Phase-by-Phase Analysis (Percentage Real Time)')
+    plt.title('Phase-by-Phase Analysis (Percentage Real Time)' + ' ({})'.format(sizes[ind]))
 
-    plt.savefig(os.path.join(p, 'phaseperime.png'))
+    plt.savefig(os.path.join(p, base + 'phaseperime.png'))
 
 
     # speedup table
@@ -208,71 +213,7 @@ if __name__ == '__main__':
     table.scale(1, 1.5)
     ax.set_title('Speedups')
     ax.axis('off')
-    plt.savefig(os.path.join(p, 'speedupstable.png'), pad_inches=0.5, bbox_inches='tight')
-
-
-    ind = -3
-    # single speedup graph for second largest
-    plt.figure()
-    plt.xticks(ticks)
-    speeds = rounds(df.query(f'size=={sizes[ind]}')['speedup'].tolist())
-    speeds.insert(0, 0)
-    plt.plot(cores, speeds, color='red', label=f'{sizes[-2]}')
-    plt.plot(cores, cores, color='grey', label='Linear')
-    plt.legend()
-    plt.xlabel('Processors')
-    plt.ylabel('Speedup')
-    plt.title('Speedups')
-    plt.savefig(os.path.join(p, 'singlepeedupsecond.png'))
-
-
-    # REAL TIME PHASE BY PHASE for second largest
-    plt.figure()
-    plt.xticks(ticks)
-
-    qres = df.query(f'size=={sizes[ind]}')
-    p1 = qres['p1time'].tolist()
-    p2 = qres['p2time'].tolist()
-    p3 = qres['p3time'].tolist()
-    p4 = qres['p4time'].tolist()
-    c = cores[1:]
-
-    plt.plot(c, p1, color='red', label='Phase 1')
-    plt.fill_between(c, p1, p3, facecolor='red', alpha=0.3)
-    plt.plot(c, p3, color='blue', label='Phase 3')
-    plt.fill_between(c, p3, p4, facecolor='blue', alpha=0.3)
-    plt.plot(c, p4, color='green', label='Phase 4')
-    plt.fill_between(c, p4, facecolor='green', alpha=0.3)
-    plt.legend()
-    plt.xlabel('Processors')
-    plt.ylabel('Real Time')
-    plt.title('Phase-by-Phase Analysis (Real Time)')
-
-    plt.savefig(os.path.join(p, 'phasetotaltimesecond.png'))
-
-    # PERCENTAGE REAL TIME PHASE BY PHASE for second largest
-    plt.figure()
-    plt.xticks(ticks)
-
-    qres = df.query(f'size=={sizes[ind]}')
-    p1 = qres['perp1'].tolist()
-    p2 = qres['perp2'].tolist()
-    p3 = qres['perp3'].tolist()
-    p4 = qres['perp4'].tolist()
-    c = cores[1:]
-
-    plt.plot(c, p1, color='red', label='Phase 1')
-    plt.fill_between(c, p1, p3, facecolor='red', alpha=0.3)
-    plt.plot(c, p3, color='blue', label='Phase 3')
-    plt.fill_between(c, p3, p4, facecolor='blue', alpha=0.3)
-    plt.plot(c, p4, color='green', label='Phase 4')
-    plt.fill_between(c, p4, facecolor='green', alpha=0.3)
-    plt.xlabel('Processors')
-    plt.ylabel('Percentage Real Time')
-    plt.title('Phase-by-Phase Analysis (Percentage Real Time)')
-
-    plt.savefig(os.path.join(p, 'phaseperimesecond.png'))
-
+    plt.savefig(os.path.join(p, base + 'speedupstable.png'), pad_inches=0.5, bbox_inches='tight')
 
 
     ind = -2
@@ -281,13 +222,13 @@ if __name__ == '__main__':
     plt.xticks(ticks)
     speeds = rounds(df.query(f'size=={sizes[ind]}')['speedup'].tolist())
     speeds.insert(0, 0)
-    plt.plot(cores, speeds, color='red', label=f'{sizes[-2]}')
+    plt.plot(cores, speeds, color='red', label=f'{sizes[ind]}')
     plt.plot(cores, cores, color='grey', label='Linear')
     plt.legend()
     plt.xlabel('Processors')
     plt.ylabel('Speedup')
     plt.title('Speedups')
-    plt.savefig(os.path.join(p, 'singlepeedupthird.png'))
+    plt.savefig(os.path.join(p, base + 'singlepeedupsecond.png'))
 
 
     # REAL TIME PHASE BY PHASE for second largest
@@ -310,9 +251,9 @@ if __name__ == '__main__':
     plt.legend()
     plt.xlabel('Processors')
     plt.ylabel('Real Time')
-    plt.title('Phase-by-Phase Analysis (Real Time)')
+    plt.title('Phase-by-Phase Analysis (Real Time)' + ' ({})'.format(sizes[ind]))
 
-    plt.savefig(os.path.join(p, 'phasetotaltimethird.png'))
+    plt.savefig(os.path.join(p, base + 'phasetotaltimesecond.png'))
 
     # PERCENTAGE REAL TIME PHASE BY PHASE for second largest
     plt.figure()
@@ -333,9 +274,73 @@ if __name__ == '__main__':
     plt.fill_between(c, p4, facecolor='green', alpha=0.3)
     plt.xlabel('Processors')
     plt.ylabel('Percentage Real Time')
-    plt.title('Phase-by-Phase Analysis (Percentage Real Time)')
+    plt.title('Phase-by-Phase Analysis (Percentage Real Time)' + ' ({})'.format(sizes[ind]))
 
-    plt.savefig(os.path.join(p, 'phaseperimethird.png'))
+    plt.savefig(os.path.join(p, base + 'phaseperimesecond.png'))
+
+
+
+    ind = -3
+    # single speedup graph for third largest
+    plt.figure()
+    plt.xticks(ticks)
+    speeds = rounds(df.query(f'size=={sizes[ind]}')['speedup'].tolist())
+    speeds.insert(0, 0)
+    plt.plot(cores, speeds, color='red', label=f'{sizes[-2]}')
+    plt.plot(cores, cores, color='grey', label='Linear')
+    plt.legend()
+    plt.xlabel('Processors')
+    plt.ylabel('Speedup')
+    plt.title('Speedups')
+    plt.savefig(os.path.join(p, base + 'singlepeedupthird.png'))
+
+
+    # REAL TIME PHASE BY PHASE for third largest
+    plt.figure()
+    plt.xticks(ticks)
+
+    qres = df.query(f'size=={sizes[ind]}')
+    p1 = qres['p1time'].tolist()
+    p2 = qres['p2time'].tolist()
+    p3 = qres['p3time'].tolist()
+    p4 = qres['p4time'].tolist()
+    c = cores[1:]
+
+    plt.plot(c, p1, color='red', label='Phase 1')
+    plt.fill_between(c, p1, p3, facecolor='red', alpha=0.3)
+    plt.plot(c, p3, color='blue', label='Phase 3')
+    plt.fill_between(c, p3, p4, facecolor='blue', alpha=0.3)
+    plt.plot(c, p4, color='green', label='Phase 4')
+    plt.fill_between(c, p4, facecolor='green', alpha=0.3)
+    plt.legend()
+    plt.xlabel('Processors')
+    plt.ylabel('Real Time')
+    plt.title('Phase-by-Phase Analysis (Real Time)' + ' ({})'.format(sizes[ind]))
+
+    plt.savefig(os.path.join(p, base + 'phasetotaltimethird.png'))
+
+    # PERCENTAGE REAL TIME PHASE BY PHASE for second largest
+    plt.figure()
+    plt.xticks(ticks)
+
+    qres = df.query(f'size=={sizes[ind]}')
+    p1 = qres['perp1'].tolist()
+    p2 = qres['perp2'].tolist()
+    p3 = qres['perp3'].tolist()
+    p4 = qres['perp4'].tolist()
+    c = cores[1:]
+
+    plt.plot(c, p1, color='red', label='Phase 1')
+    plt.fill_between(c, p1, p3, facecolor='red', alpha=0.3)
+    plt.plot(c, p3, color='blue', label='Phase 3')
+    plt.fill_between(c, p3, p4, facecolor='blue', alpha=0.3)
+    plt.plot(c, p4, color='green', label='Phase 4')
+    plt.fill_between(c, p4, facecolor='green', alpha=0.3)
+    plt.xlabel('Processors')
+    plt.ylabel('Percentage Real Time')
+    plt.title('Phase-by-Phase Analysis (Percentage Real Time)' + ' ({})'.format(sizes[ind]))
+
+    plt.savefig(os.path.join(p, base + 'phaseperimethird.png'))
 
 
     print('FIGURE CREATION COMPLETE')

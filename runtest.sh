@@ -1,7 +1,6 @@
 
-#ARR_SIZE=1000000
-#SEED=2
-DO_VERIFY=0
+set -e
+DO_VERIFY=1
 
 truncate -s 0 outputhandling/results.txt
 
@@ -36,3 +35,6 @@ done
 perl -pi -e "chomp if eof" outputhandling/results.txt
 
 ./outputhandling/result_agg.py
+
+
+
