@@ -130,7 +130,7 @@ def main(local=False):
                      rowLoc='center', cellLoc='center')
 
     table.scale(1, 1.5)
-    ax.set_title('Times')
+    ax.set_title('Times (In Seconds)')
     ax.axis('off')
     plt.savefig(os.path.join(p, base + 'timestable.png'), pad_inches=0.5, bbox_inches='tight')
 
@@ -286,7 +286,7 @@ def main(local=False):
     plt.xticks(ticks)
     speeds = rounds(df.query(f'size=={sizes[ind]}')['speedup'].tolist())
     speeds.insert(0, 0)
-    plt.plot(cores, speeds, color='red', label=f'{sizes[-2]}')
+    plt.plot(cores, speeds, color='red', label=f'{sizes[ind]}')
     plt.plot(cores, cores, color='grey', label='Linear')
     plt.legend()
     plt.xlabel('Processors')

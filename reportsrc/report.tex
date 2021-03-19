@@ -3,6 +3,8 @@
 \graphicspath{ {../outputhandling/} }
 \usepackage[margin=1in]{geometry}
 
+\newcommand{\SCALE}{0.5}
+\usepackage[font=small,labelfont=bf]{caption}
 
 % Phase 4  for 6 cores time for 100mil = 0.8, for 120mil 5 seconds??
 
@@ -23,6 +25,138 @@ understands.\\
 I aimed to use the collective operations in MPI as much as possible, only using \verb|MPI_Gather| and \verb|MPI_Bcast| until phase 3, where \verb|MPI_Isend| and \verb|MPI_Irecv| are used. I made this decision because my algorithm for dividing
 up the local partitions into its \verb|p| components generates a seperate vector
 for each of these components. Therefore, using something like an \verb|MPI_Scatterv| operation would required modifications to the algorithm to keep everything in a contiguous array, allowing plenty of problems due to off-by-one errors. Since Phase 3 follows the pattern of "everyone sends everyone else a message", having a simple for loop where every node makes a non blocking send and receive to the ith process, and then simply waits to receive all its messages maps very well to the logic of what needs to be done.
+
+
+
+\section*{Experimentation Using Random Data}
+\subsection*{Experiment Setup}
+Due to the limited resources offered from Cybera RAC creating some strange results
+at higher array lengths, I also mirrored the test suite on my local machine to
+compare the results. The baseline for both tests was a single machine sorting the
+array using \verb|std::sort()|. The test were run using 2, 4, 6 and 8 cores, on array sizes of 100k, 32mil, 64mil and 96mil. The array sizes I used are much smaller
+than they were in assignment 1, as I was limited by the fact that each Cybera RAC
+VM only has 2GB of ram, and therefore, going much past 100mil elements caused 
+massive slowdown, and at times cause the entire program to crash.
+\subsection*{Verifying Correctness}
+During the initial implementation I relied heavily on 36 integer dataset from the 
+PSRS paper, ensuring the results matched at every step of the algorithm. In order to ensure correctness on larger datasets, once the algorithm has completed, I first assert that the array is in fact sorted, then I sort the original unsorted array using \verb|std::sort()|, and assert that the two arrays are identical.
+\subsection*{Results}
+The timings of each phase follows the guidelines from the PSRS paper, with phase one starting after the data has been distributed to all processors, and phase 4 ending
+after each processor has finished sorting their local partitions, not including any time it would take to join the partitions back together to the master process.\\
+\subsubsection*{Cybera RAC Performance}
+My hardware configuration for Cybera RAC was 4 VMs, each with 2 VCPUs, and 2GB of ram. Due to the nature of this configuration, I had 2 different hostfiles, the first used 
+for core counts 2 and 4, where each node in use would receive exactly one job, and then another for core counts 6 and 8, where each node in use would receive exactly 2 jobs.
+However, this configuration severely limited the size of the inputs that I could test, as at $arr size=96mil$, and $p=2$, a slowdown of roughly $34\%$ was observed. My
+hypothesis to explain this anomally is that near the end of the algorithm, the memory pressure on the master node is too great to maintain reasonable performance.\\\\
+Since each element in the array is of type \verb|long int|, and therefore 8 bytes in size, and $96000000 elements * 8 = .0768 GB$, roughly half of total memory available to the 
+system has been depleted, the master node then will receive the copy of its local partition of the local data, which will be roughly $N/2$ elements, and then another $N/2$
+elements during the message passing section in phase 3. Between all of the various message passing and data copying, the master node uses roughly $(N*2) * 8$ bytes of 
+memory by the completion of the sort, largely due to the fact that the original array of unsorted data must be preserved in order to verify the correctness of the
+PSRS sort. This issue can be observed in Figure 8, where the time taken for phase 4 at $p=2$ spikes significantly.\\
+At lower array sizes, the results are much more like what is to be expected (see Figure 9), with a gradual and consistent decrease in phase 1 time, however, I expected to see a more significant improvement in phase 4 as core count increases. In the case of phase 3, it appears that sending multiple smaller
+messages, is more performant than fewer, larger messages, as is evident by the significant improve in phase 3 between $p=2$ and $p=4$. As well as despite the fact that more
+messages must be sent with $p=6$ and $p=8$, many of these messages will be send to another process on the same node, rather than over the network.\\
+Unfortunately due to the limitations in terms of compute resources, an array size large enough to drown out the overhead of using a distributed system is not possible, and the most significant speedup observed is still less than $p/2$.
+
+\begin{minipage}{\SCALE\linewidth}
+\includegraphics[scale=0.6]{timestable.png}
+\captionof{figure}{}
+\end{minipage}
+\hfill
+\begin{minipage}{\SCALE\linewidth}
+\includegraphics[scale=0.6]{speedupstable.png}
+\captionof{figure}{}
+\end{minipage}
+
+\begin{minipage}{\SCALE\linewidth}
+\includegraphics[width=\linewidth]{speedups.png}
+\captionof{figure}{}
+\end{minipage}
+\hfill
+\begin{minipage}{\SCALE\linewidth}
+\includegraphics[width=\linewidth]{singlepeedup.png}
+\captionof{figure}{}
+\end{minipage}
+
+\begin{minipage}{\SCALE\linewidth}
+\includegraphics[width=\linewidth]{singlepeedupsecond.png}
+\captionof{figure}{}
+\end{minipage}
+
+\begin{minipage}{\SCALE\linewidth}
+\includegraphics[width=\linewidth]{phaseperime.png}
+\captionof{figure}{}
+\end{minipage}
+\hfill
+\begin{minipage}{\SCALE\linewidth}
+\includegraphics[width=\linewidth]{phaseperimesecond.png}
+\captionof{figure}{}
+\end{minipage}
+
+\begin{minipage}{\SCALE\linewidth}
+\includegraphics[width=\linewidth]{phasetotaltime.png}
+\captionof{figure}{}
+\end{minipage}
+\hfill
+\begin{minipage}{\SCALE\linewidth}
+\includegraphics[width=\linewidth]{phasetotaltimesecond.png}
+\captionof{figure}{}
+\end{minipage}
+
+
+\subsubsection*{Local Machine Performance}
+My hardware configuration for the local machine test is an AMD Ryzen 7 3700x, with 32 GB of memory. As is evident in figures 10, and 11, removing the memory constraints, and 
+using purely interprocess communication has improved performance considerably, resulting in a
+136\% improvement in speedup at $arrsize=96000000$ and $p=8$, versus the distributed version. The time savings from using interprocess communication is quite evident in figure 15 and 17m making up only 10-20\% of the total runtime, vs. 30-35\% in the distributed version.
+
+\begin{minipage}{\SCALE\linewidth}
+\includegraphics[scale=0.6]{localtimestable.png}
+\captionof{figure}{}
+\end{minipage}
+\hfill
+\begin{minipage}{\SCALE\linewidth}
+\includegraphics[scale=0.6]{localspeedupstable.png}
+\captionof{figure}{}
+\end{minipage}
+
+\begin{minipage}{\SCALE\linewidth}
+\includegraphics[width=\linewidth]{localspeedups.png}
+\captionof{figure}{}
+\end{minipage}
+\hfill
+\begin{minipage}{\SCALE\linewidth}
+\includegraphics[width=\linewidth]{localsinglepeedup.png}
+\captionof{figure}{}
+\end{minipage}
+
+\begin{minipage}{\SCALE\linewidth}
+\includegraphics[width=\linewidth]{localsinglepeedupsecond.png}
+\captionof{figure}{}
+\end{minipage}
+
+\begin{minipage}{\SCALE\linewidth}
+\includegraphics[width=\linewidth]{localphaseperime.png}
+\captionof{figure}{}
+\end{minipage}
+\hfill
+\begin{minipage}{\SCALE\linewidth}
+\includegraphics[width=\linewidth]{localphaseperimesecond.png}
+\captionof{figure}{}
+\end{minipage}
+
+\begin{minipage}{\SCALE\linewidth}
+\includegraphics[width=\linewidth]{localphasetotaltime.png}
+\captionof{figure}{}
+\end{minipage}
+\hfill
+\begin{minipage}{\SCALE\linewidth}
+\includegraphics[width=\linewidth]{localphasetotaltimesecond.png}
+\captionof{figure}{}
+\end{minipage}
+
+\section*{Conclusion}
+
+
 
 
 \end{document}

@@ -4,7 +4,7 @@ set -e
 truncate -s 0 outputhandling/localresults.txt
 DO_VERIFY=1
 
-for ARR_SIZE in 1000000 32000000 64000000  #96000000 150000000
+for ARR_SIZE in 1000000 32000000 64000000 96000000
 do
   for CORE_COUNT in 1 2 4 6 8
   do
