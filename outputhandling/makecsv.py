@@ -1,5 +1,9 @@
 import pandas as pd
 
+"""
+Parses the raw output from the PSRS program into a nice csv table used to create graphs and tables
+"""
+
 if __name__ == '__main__':
     content = open('test.out').read().split('\n\n')
     entries = [x.split('\n') for x in content]

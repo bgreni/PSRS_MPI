@@ -10,6 +10,11 @@ import matplotlib.pyplot as plt
 import begin
 
 
+"""
+Big dumb script to generate graphs and tables, that should have just done in a loop
+"""
+
+
 def config_in(newitem, allitems):
     for item in allitems:
         if int(newitem[0]) == int(item[0]) and int(newitem[1]) == int(item[1]):

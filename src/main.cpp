@@ -171,7 +171,7 @@ int main(int argc, char ** argv) {
     MPI_Status stats[p];
 
 
-    // unfortunately more overhead, but the potentially memory waste of having to guess and overallocate the
+    // unfortunately more overhead, but the memory waste of having to guess and over-allocate the
     // sizes of these partitions could be pretty bad at larger input sizes
     int sizes[p] = { 0 };
     for (int i = 0; i < p; ++i) {
