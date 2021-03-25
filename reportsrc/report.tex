@@ -19,9 +19,9 @@ Due to the limitation in available hardware from Cybera RAC, it was impossible t
 the input data enough to feel confident about what the test results implied about the quality of my
 implementation. As a result, I instead chose to pivot my observations to what impact running the program 
 as a distributed application across many machines, vs. running it on my local machine using purely
-interprocess communication.\\
+inter-process communication.\\
 At $p=8$ and $arrsize>=64mil$ the single machine benchmarks show an improvement in speedup of
-roughly 36\%. Looking at figures 7, 9 and 16, 18 the reduction in phase 3 runtime is quite apparent, however, again do to the limitations in hardware, phase two runtime never made any meaningful contributions to the total runtime, and have been ommited from the phase-by-phase analysis. It should be noted that the details about the quality of the hardware at my disposal from Cybera RAC does represent
+roughly 36\%. Looking at figures 7, 9 and 16, 18 the reduction in phase 3 runtime is quite apparent, however, again do to the limitations in hardware, phase two runtime never made any meaningful contributions to the total runtime, and have been omitted from the phase-by-phase analysis. It should be noted that the details about the quality of the hardware at my disposal from Cybera RAC does represent
 an uncontrolled variable in this experiment, and therefore, it is unknown how the differences in hardware
 between my local machine, and the Cybera RAC VMs effect the speedup results.
 
@@ -55,7 +55,7 @@ after each processor has finished sorting their local partitions, not including 
 My hardware configuration for Cybera RAC was 4 VMs, each with 2 VCPUs, and 2GB of ram. Due to the nature of this configuration, I had 2 different hostfiles, the first used 
 for core counts 2 and 4, where each node in use would receive exactly one job, and then another for core counts 6 and 8, where each node in use would receive exactly 2 jobs.
 However, this configuration severely limited the size of the inputs that I could test, as at $arr size=96mil$, and $p=2$, a slowdown of roughly $34\%$ was observed. My
-hypothesis to explain this anomally is that near the end of the algorithm, the memory pressure on the master node is too great to maintain reasonable performance.\\\\
+hypothesis to explain this anomaly is that near the end of the algorithm, the memory pressure on the master node is too great to maintain reasonable performance.\\\\
 Since each element in the array is of type \verb|long int|, and therefore 8 bytes in size, and $96000000* 8 = .768 GB$, approaching half of total memory available to the 
 system has been depleted, the master node then will receive the copy of its local partition of the local data, which will be roughly $N/2$ elements, and then another $N/2$
 elements during the message passing section in phase 3. Between all of the various message passing and data copying, the master node uses roughly $(N*2) * 8$ bytes of 
@@ -114,8 +114,8 @@ Unfortunately due to the limitations in terms of compute resources, an array siz
 
 \subsubsection*{Local Machine Performance}
 My hardware configuration for the local machine test is an AMD Ryzen 7 3700x, with 32 GB of memory. As is evident in figures 10, and 11, removing the memory constraints, and 
-using purely interprocess communication has improved performance considerably, resulting in a
-36\% improvement in speedup at $arrsize=96000000$ and $p=8$, versus the distributed version. The time savings from using interprocess communication is quite evident in figure 15 and 17m making up only 10-20\% of the total runtime, vs. 30-35\% in the distributed version.
+using purely inter-process communication has improved performance considerably, resulting in a
+36\% improvement in speedup at $arrsize=96000000$ and $p=8$, versus the distributed version. The time savings from using inter-process communication is quite evident in figure 15 and 17m making up only 10-20\% of the total runtime, vs. 30-35\% in the distributed version.
 
 \begin{minipage}{\SCALE\linewidth}
 \includegraphics[scale=0.6]{localtimestable.png}
@@ -165,10 +165,10 @@ using purely interprocess communication has improved performance considerably, r
 \section*{Conclusion}
 
 \subsection*{Weakness in Implementation}
-In phase 3, In chose to use a 2d \verb|std::vector|, and expanded the partitions using the \\ \verb|std::vector.push_back()| operator, which means at larger input sizes, these vectors likely must resize mutliple times each, damaging runtime. However, using a fixed size array would require estimating the size that each partition should be, which could prove to be dangerous, so I opted to use \verb|std::vector| in the name of safety, at the expense of runtime, and likely memory usage (since \verb|std| containers tend to overallocate memory in order to avoid resizing too often.
+In phase 3, In chose to use a 2d \verb|std::vector|, and expanded the partitions using the \\ \verb|std::vector.push_back()| operator, which means at larger input sizes, these vectors likely must resize multiple times each, damaging runtime. However, using a fixed size array would require estimating the size that each partition should be, which could prove to be dangerous, so I opted to use \verb|std::vector| in the name of safety, at the expense of runtime, and likely memory usage (since \verb|std| containers tend to over-allocate memory in order to avoid resizing too often.
 
 \subsection*{Lessons/Conclusions}
-While the data does cleary demonstrate the performance price we must pay in order to utilize message
+While the data does clearly demonstrate the performance price we must pay in order to utilize message
 passing over a network, I fear the awkward hardware configuration I used, specifically at $p=6,8$, where each VM receives 2 jobs, meaning that not every message will be send over the network, might have muddied
 my results somewhat. I could have avoided that issue had I used a configuration of 8 single core VMs, however, in that case each VM would only get 1GB of ram each, which would have worsened the memory issues
 I already experienced, especially on the master node.\\\\
