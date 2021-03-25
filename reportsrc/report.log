@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian) (preloaded format=pdflatex 2021.2.5)  24 MAR 2021 18:47
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian) (preloaded format=pdflatex 2021.2.5)  24 MAR 2021 22:41
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -184,12 +184,12 @@ LaTeX Warning: No \author given.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <10.95> on input line 23.
  [1]
-Underfull \hbox (badness 10000) in paragraph at lines 52--54
+Underfull \hbox (badness 10000) in paragraph at lines 55--57
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 55--68
+Underfull \hbox (badness 10000) in paragraph at lines 58--71
 
  []
 
@@ -197,10 +197,10 @@ Underfull \hbox (badness 10000) in paragraph at lines 55--68
 File: ../outputhandling/timestable.png Graphic file (type png)
 <use ../outputhandling/timestable.png>
 Package pdftex.def Info: ../outputhandling/timestable.png  used on input line 7
-0.
+3.
 (pdftex.def)             Requested size: 247.59892pt x 107.53857pt.
 
-Overfull \hbox (12.72142pt too wide) in paragraph at lines 70--71
+Overfull \hbox (12.72142pt too wide) in paragraph at lines 73--74
 [][] 
  []
 
@@ -208,176 +208,177 @@ Overfull \hbox (12.72142pt too wide) in paragraph at lines 70--71
 File: ../outputhandling/speedupstable.png Graphic file (type png)
 <use ../outputhandling/speedupstable.png>
 Package pdftex.def Info: ../outputhandling/speedupstable.png  used on input lin
-e 75.
+e 78.
 (pdftex.def)             Requested size: 247.59892pt x 107.53857pt.
 
-Overfull \hbox (12.72142pt too wide) in paragraph at lines 75--76
+Overfull \hbox (12.72142pt too wide) in paragraph at lines 78--79
 [][] 
  []
 
 
-Overfull \hbox (19.43332pt too wide) in paragraph at lines 69--78
+Overfull \hbox (19.43332pt too wide) in paragraph at lines 72--81
 []$[]$  $[]$ 
  []
 
-<../outputhandling/speedups.png, id=18, 462.528pt x 346.896pt>
+[2]
+<../outputhandling/speedups.png, id=23, 462.528pt x 346.896pt>
 File: ../outputhandling/speedups.png Graphic file (type png)
 <use ../outputhandling/speedups.png>
-Package pdftex.def Info: ../outputhandling/speedups.png  used on input line 80.
+Package pdftex.def Info: ../outputhandling/speedups.png  used on input line 83.
 
 (pdftex.def)             Requested size: 234.8775pt x 176.15768pt.
-<../outputhandling/singlepeedup.png, id=19, 462.528pt x 346.896pt>
+<../outputhandling/singlepeedup.png, id=24, 462.528pt x 346.896pt>
 File: ../outputhandling/singlepeedup.png Graphic file (type png)
 <use ../outputhandling/singlepeedup.png>
 Package pdftex.def Info: ../outputhandling/singlepeedup.png  used on input line
- 85.
+ 88.
 (pdftex.def)             Requested size: 234.8775pt x 176.15768pt.
 
-Overfull \hbox (19.43332pt too wide) in paragraph at lines 79--88
+Overfull \hbox (19.43332pt too wide) in paragraph at lines 82--91
 []$[]$  $[]$ 
  []
 
-[2 <../outputhandling/timestable.png> <../outputhandling/speedupstable.png>]
-<../outputhandling/singlepeedupsecond.png, id=27, 462.528pt x 346.896pt>
+<../outputhandling/singlepeedupsecond.png, id=25, 462.528pt x 346.896pt>
 File: ../outputhandling/singlepeedupsecond.png Graphic file (type png)
 <use ../outputhandling/singlepeedupsecond.png>
 Package pdftex.def Info: ../outputhandling/singlepeedupsecond.png  used on inpu
-t line 90.
+t line 93.
 (pdftex.def)             Requested size: 234.8775pt x 176.15768pt.
-<../outputhandling/phaseperime.png, id=28, 462.528pt x 346.896pt>
+<../outputhandling/phaseperime.png, id=26, 462.528pt x 346.896pt>
 File: ../outputhandling/phaseperime.png Graphic file (type png)
 <use ../outputhandling/phaseperime.png>
 Package pdftex.def Info: ../outputhandling/phaseperime.png  used on input line 
-95.
+98.
 (pdftex.def)             Requested size: 234.8775pt x 176.15768pt.
-<../outputhandling/phaseperimesecond.png, id=29, 462.528pt x 346.896pt>
+<../outputhandling/phaseperimesecond.png, id=27, 462.528pt x 346.896pt>
 File: ../outputhandling/phaseperimesecond.png Graphic file (type png)
 <use ../outputhandling/phaseperimesecond.png>
 Package pdftex.def Info: ../outputhandling/phaseperimesecond.png  used on input
- line 100.
+ line 103.
 (pdftex.def)             Requested size: 234.8775pt x 176.15768pt.
 
-Overfull \hbox (19.43332pt too wide) in paragraph at lines 94--103
+Overfull \hbox (19.43332pt too wide) in paragraph at lines 97--106
 []$[]$  $[]$ 
  []
 
-<../outputhandling/phasetotaltime.png, id=30, 462.528pt x 346.896pt>
+[3 <../outputhandling/timestable.png> <../outputhandling/speedupstable.png> <..
+/outputhandling/speedups.png> <../outputhandling/singlepeedup.png> <../outputha
+ndling/singlepeedupsecond.png>]
+<../outputhandling/phasetotaltime.png, id=36, 462.528pt x 346.896pt>
 File: ../outputhandling/phasetotaltime.png Graphic file (type png)
 <use ../outputhandling/phasetotaltime.png>
 Package pdftex.def Info: ../outputhandling/phasetotaltime.png  used on input li
-ne 105.
+ne 108.
 (pdftex.def)             Requested size: 234.8775pt x 176.15768pt.
-<../outputhandling/phasetotaltimesecond.png, id=31, 462.528pt x 346.896pt>
+<../outputhandling/phasetotaltimesecond.png, id=37, 462.528pt x 346.896pt>
 File: ../outputhandling/phasetotaltimesecond.png Graphic file (type png)
 <use ../outputhandling/phasetotaltimesecond.png>
 Package pdftex.def Info: ../outputhandling/phasetotaltimesecond.png  used on in
-put line 110.
+put line 113.
 (pdftex.def)             Requested size: 234.8775pt x 176.15768pt.
 
-Overfull \hbox (19.43332pt too wide) in paragraph at lines 104--113
+Overfull \hbox (19.43332pt too wide) in paragraph at lines 107--116
 []$[]$  $[]$ 
  []
 
-[3 <../outputhandling/speedups.png> <../outputhandling/singlepeedup.png> <../ou
-tputhandling/singlepeedupsecond.png> <../outputhandling/phaseperime.png> <../ou
-tputhandling/phaseperimesecond.png>]
-<../outputhandling/localtimestable.png, id=40, 412.6617pt x 179.2296pt>
+<../outputhandling/localtimestable.png, id=38, 412.6617pt x 179.2296pt>
 File: ../outputhandling/localtimestable.png Graphic file (type png)
 <use ../outputhandling/localtimestable.png>
 Package pdftex.def Info: ../outputhandling/localtimestable.png  used on input l
-ine 121.
+ine 124.
 (pdftex.def)             Requested size: 247.59892pt x 107.53857pt.
 
-Overfull \hbox (12.72142pt too wide) in paragraph at lines 121--122
+Overfull \hbox (12.72142pt too wide) in paragraph at lines 124--125
 [][] 
  []
 
-<../outputhandling/localspeedupstable.png, id=41, 412.6617pt x 179.2296pt>
+<../outputhandling/localspeedupstable.png, id=39, 412.6617pt x 179.2296pt>
 File: ../outputhandling/localspeedupstable.png Graphic file (type png)
 <use ../outputhandling/localspeedupstable.png>
 Package pdftex.def Info: ../outputhandling/localspeedupstable.png  used on inpu
-t line 126.
+t line 129.
 (pdftex.def)             Requested size: 247.59892pt x 107.53857pt.
 
-Overfull \hbox (12.72142pt too wide) in paragraph at lines 126--127
+Overfull \hbox (12.72142pt too wide) in paragraph at lines 129--130
 [][] 
  []
 
 
-Overfull \hbox (19.43332pt too wide) in paragraph at lines 120--129
+Overfull \hbox (19.43332pt too wide) in paragraph at lines 123--132
 []$[]$  $[]$ 
  []
 
-<../outputhandling/localspeedups.png, id=42, 462.528pt x 346.896pt>
+<../outputhandling/localspeedups.png, id=40, 462.528pt x 346.896pt>
 File: ../outputhandling/localspeedups.png Graphic file (type png)
 <use ../outputhandling/localspeedups.png>
 Package pdftex.def Info: ../outputhandling/localspeedups.png  used on input lin
-e 131.
+e 134.
 (pdftex.def)             Requested size: 234.8775pt x 176.15768pt.
-<../outputhandling/localsinglepeedup.png, id=43, 462.528pt x 346.896pt>
+<../outputhandling/localsinglepeedup.png, id=41, 462.528pt x 346.896pt>
 File: ../outputhandling/localsinglepeedup.png Graphic file (type png)
 <use ../outputhandling/localsinglepeedup.png>
 Package pdftex.def Info: ../outputhandling/localsinglepeedup.png  used on input
- line 136.
+ line 139.
 (pdftex.def)             Requested size: 234.8775pt x 176.15768pt.
 
-Overfull \hbox (19.43332pt too wide) in paragraph at lines 130--139
+Overfull \hbox (19.43332pt too wide) in paragraph at lines 133--142
 []$[]$  $[]$ 
  []
 
-<../outputhandling/localsinglepeedupsecond.png, id=44, 462.528pt x 346.896pt>
+[4 <../outputhandling/phaseperime.png> <../outputhandling/phaseperimesecond.png
+> <../outputhandling/phasetotaltime.png> <../outputhandling/phasetotaltimesecon
+d.png> <../outputhandling/localtimestable.png> <../outputhandling/localspeedups
+table.png>]
+<../outputhandling/localsinglepeedupsecond.png, id=51, 462.528pt x 346.896pt>
 File: ../outputhandling/localsinglepeedupsecond.png Graphic file (type png)
 <use ../outputhandling/localsinglepeedupsecond.png>
 Package pdftex.def Info: ../outputhandling/localsinglepeedupsecond.png  used on
- input line 141.
+ input line 144.
 (pdftex.def)             Requested size: 234.8775pt x 176.15768pt.
-[4 <../outputhandling/phasetotaltime.png> <../outputhandling/phasetotaltimeseco
-nd.png> <../outputhandling/localtimestable.png> <../outputhandling/localspeedup
-stable.png> <../outputhandling/localspeedups.png> <../outputhandling/localsingl
-epeedup.png>]
-<../outputhandling/localphaseperime.png, id=54, 462.528pt x 346.896pt>
+<../outputhandling/localphaseperime.png, id=52, 462.528pt x 346.896pt>
 File: ../outputhandling/localphaseperime.png Graphic file (type png)
 <use ../outputhandling/localphaseperime.png>
 Package pdftex.def Info: ../outputhandling/localphaseperime.png  used on input 
-line 146.
+line 149.
 (pdftex.def)             Requested size: 234.8775pt x 176.15768pt.
-<../outputhandling/localphaseperimesecond.png, id=55, 462.528pt x 346.896pt>
+<../outputhandling/localphaseperimesecond.png, id=53, 462.528pt x 346.896pt>
 File: ../outputhandling/localphaseperimesecond.png Graphic file (type png)
 <use ../outputhandling/localphaseperimesecond.png>
 Package pdftex.def Info: ../outputhandling/localphaseperimesecond.png  used on 
-input line 151.
+input line 154.
 (pdftex.def)             Requested size: 234.8775pt x 176.15768pt.
 
-Overfull \hbox (19.43332pt too wide) in paragraph at lines 145--154
+Overfull \hbox (19.43332pt too wide) in paragraph at lines 148--157
 []$[]$  $[]$ 
  []
 
-<../outputhandling/localphasetotaltime.png, id=56, 462.528pt x 346.896pt>
+<../outputhandling/localphasetotaltime.png, id=54, 462.528pt x 346.896pt>
 File: ../outputhandling/localphasetotaltime.png Graphic file (type png)
 <use ../outputhandling/localphasetotaltime.png>
 Package pdftex.def Info: ../outputhandling/localphasetotaltime.png  used on inp
-ut line 156.
+ut line 159.
 (pdftex.def)             Requested size: 234.8775pt x 176.15768pt.
-<../outputhandling/localphasetotaltimesecond.png, id=57, 462.528pt x 346.896pt>
+<../outputhandling/localphasetotaltimesecond.png, id=55, 462.528pt x 346.896pt>
 
 File: ../outputhandling/localphasetotaltimesecond.png Graphic file (type png)
 <use ../outputhandling/localphasetotaltimesecond.png>
 Package pdftex.def Info: ../outputhandling/localphasetotaltimesecond.png  used 
-on input line 161.
+on input line 164.
 (pdftex.def)             Requested size: 234.8775pt x 176.15768pt.
 
-Overfull \hbox (19.43332pt too wide) in paragraph at lines 155--164
+Overfull \hbox (19.43332pt too wide) in paragraph at lines 158--167
 []$[]$  $[]$ 
  []
 
-[5 <../outputhandling/localsinglepeedupsecond.png> <../outputhandling/localphas
-eperime.png> <../outputhandling/localphaseperimesecond.png> <../outputhandling/
-localphasetotaltime.png> <../outputhandling/localphasetotaltimesecond.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 171--176
+[5 <../outputhandling/localspeedups.png> <../outputhandling/localsinglepeedup.p
+ng> <../outputhandling/localsinglepeedupsecond.png> <../outputhandling/localpha
+seperime.png> <../outputhandling/localphaseperimesecond.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 174--179
 
  []
 
-[6] (./report.aux) ) 
+[6 <../outputhandling/localphasetotaltime.png> <../outputhandling/localphasetot
+altimesecond.png>] (./report.aux) ) 
 Here is how much of TeX's memory you used:
  2968 strings out of 482811
  49993 string characters out of 5955741
@@ -385,16 +386,16 @@ Here is how much of TeX's memory you used:
  18321 multiletter control sequences out of 15000+600000
  540735 words of font info for 48 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 38i,7n,43p,996b,317s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmb
-x12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pf
-b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr
-/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/
-texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf
--dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on report.pdf (7 pages, 511715 bytes).
+ 38i,7n,43p,1003b,317s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texlive/texmf-dist/fonts/type1/p
+ublic/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
+amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.p
+fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></us
+r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/shar
+e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on report.pdf (7 pages, 511900 bytes).
 PDF statistics:
  97 PDF objects out of 1000 (max. 8388607)
  43 compressed objects within 1 object stream
