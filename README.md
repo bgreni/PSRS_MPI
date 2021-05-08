@@ -1,3 +1,6 @@
+# PSRS MPI
+An implementation of the PSRS distributed sorting algorithm using MPI for inter process communication
+
 # Running the program
 on the off chance you want to actually run the project, follow these steps from the 
 root folder of the project
